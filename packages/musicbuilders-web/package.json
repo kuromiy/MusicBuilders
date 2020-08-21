@@ -1,0 +1,14 @@
+{
+  "name": "musicbuilders-web",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.0.2"
+  },
+  "dependencies": {
+    "musicbuilders-domain": "1.0.0",
+    "musicbuilders-port": "1.0.0",
+    "musicbuilders-usecase": "1.0.0"
+  }
+}
