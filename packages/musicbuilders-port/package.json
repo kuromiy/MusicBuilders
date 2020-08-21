@@ -5,5 +5,8 @@
   "license": "MIT",
   "devDependencies": {
     "typescript": "^4.0.2"
+  },
+  "dependencies": {
+    "musicbuilders-usecase": "1.0.0"
   }
 }
