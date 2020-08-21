@@ -1,0 +1,10 @@
+{
+  "name": "music-builders",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/kuromiy/MusicBuilders.git",
+  "author": "ituki <krmy3993@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": ["packages/*"]
+}
