@@ -1,3 +1,7 @@
 {
-  "extends": "../../tsconfig.json"
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    // promise使用するために設定
+    "lib": ["ES2015"]
+  },
 }
