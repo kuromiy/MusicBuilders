@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 import Express from "express";
 import BodyParser from "body-parser";
 import ExpressSession from "express-session";

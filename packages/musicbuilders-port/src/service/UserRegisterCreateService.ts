@@ -3,14 +3,16 @@ import { UserRegisterCreateResponse } from "../response/UserRegisterCreateRespon
 import { UserCreateUseCase } from "musicbuilders-usecase/src/action/user/create/UserCreateUseCase";
 import { UserCreateInput } from "musicbuilders-usecase/src/action/user/create/UserCreateInput";
 import { UserCreateOutput } from "musicbuilders-usecase/src/action/user/create/UserCreateOutput";
+import { inject, injectable } from "inversify";
 
 /**
  * ユーザー登録画面ユーザー登録サービス
  */
+@injectable()
 export class UserRegisterCreateService {
   private _userCreateUseCase: UserCreateUseCase;
 
-  constructor(userCreateUseCase: UserCreateUseCase) {
+  constructor(@inject("UserCreateUseCase") userCreateUseCase: UserCreateUseCase) {
     this._userCreateUseCase = userCreateUseCase;
   }
 

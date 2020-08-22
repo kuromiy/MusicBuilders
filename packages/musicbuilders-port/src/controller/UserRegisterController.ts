@@ -1,3 +1,4 @@
+import { inject, injectable } from "inversify";
 import { UserRegisterCreateRequest } from "../request/UserRegisterCreateRequest";
 import { UserRegisterIndexRequest } from "../request/UserRegisterIndexRequest";
 import { UserRegisterCreateResponse } from "../response/UserRegisterCreateResponse";
@@ -7,10 +8,11 @@ import { UserRegisterCreateService } from "../service/UserRegisterCreateService"
 /**
  * ユーザー登録画面コントローラー
  */
+@injectable()
 export class UserRegisterController {
   private _userRegisterCreateService: UserRegisterCreateService;
 
-  constructor(userRegisterCreateService: UserRegisterCreateService) {
+  constructor(@inject(UserRegisterCreateService) userRegisterCreateService: UserRegisterCreateService) {
     this._userRegisterCreateService = userRegisterCreateService;
   }
 

@@ -16,8 +16,10 @@
     "ejs": "^3.1.5",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
+    "inversify": "^5.0.1",
     "musicbuilders-domain": "1.0.0",
     "musicbuilders-port": "1.0.0",
-    "musicbuilders-usecase": "1.0.0"
+    "musicbuilders-usecase": "1.0.0",
+    "reflect-metadata": "^0.1.13"
   }
 }

@@ -9,14 +9,16 @@ import { User } from "musicbuilders-domain/src/user/User";
 import { UserId } from "musicbuilders-domain/src/user/UserId";
 import { UserDto } from "../../../dto/user/UserDto";
 import { UserConverter } from "../../../converter/UserConverter";
+import { inject, injectable } from "inversify";
 
 /**
  * ユーザー作成ユースケース実装クラス
  */
+@injectable()
 export class UserCreateAction implements UserCreateUseCase {
   private _userRepository: UserRepository;
 
-  constructor(userRepository: UserRepository) {
+  constructor(@inject("UserRepository") userRepository: UserRepository) {
     this._userRepository = userRepository;
   }
 
