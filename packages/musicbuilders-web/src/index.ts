@@ -4,6 +4,7 @@ import Express from "express";
 import BodyParser from "body-parser";
 import ExpressSession from "express-session";
 import router from "./router";
+import { Connection, createConnection } from "typeorm";
 
 // Express設定
 const app: Express.Express = Express();
@@ -32,6 +33,11 @@ app.use(ExpressSession({
 app.use("/music-builders", router);
 
 // Server開始
-app.listen(3000, () => {
-  console.log("STAT port: 3000");
-});
+const config = require("../ormconfig.js");
+createConnection(config).then((connection: Connection) => {
+  app.listen(3000, () => {
+    console.log("STAT port: 3000");
+  });
+}).catch((err: any) => {
+  console.error(err);
+})

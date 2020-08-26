@@ -3,16 +3,26 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "start:dev": "cross-env NODE_ENV=development ts-node src/index.ts",
+    "entity:create": "typeorm entity:create",
+    "migrations:generate": "ts-node ../../node_modules/typeorm/cli.js migrations:generate",
+    "migrations:run": "ts-node ../../node_modules/typeorm/cli.js migrations:run"
+  },
   "devDependencies": {
     "@types/body-parser": "^1.19.0",
+    "@types/config": "^0.0.36",
     "@types/express": "^4.17.7",
     "@types/express-session": "^1.17.0",
     "@types/node": "^14.6.0",
+    "@types/uuid": "^8.3.0",
+    "cross-env": "^7.0.2",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.2"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
+    "config": "^3.3.1",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
@@ -20,6 +30,9 @@
     "musicbuilders-domain": "1.0.0",
     "musicbuilders-port": "1.0.0",
     "musicbuilders-usecase": "1.0.0",
-    "reflect-metadata": "^0.1.13"
+    "pg": "^8.3.2",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.25",
+    "uuid": "^8.3.0"
   }
 }
