@@ -32,6 +32,14 @@ app.use(ExpressSession({
 // Routing設定
 app.use("/music-builders", router);
 
+// Error設定
+app.use((err: Error, req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
+  console.log("ERROR Handler:");
+  console.log(err);
+  res.status(500);
+  return res.send(err.message);
+});
+
 // Server開始
 const config = require("../ormconfig.js");
 createConnection(config).then((connection: Connection) => {

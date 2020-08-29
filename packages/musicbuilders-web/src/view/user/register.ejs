@@ -7,14 +7,27 @@
   <body>
     <h1>ユーザー登録</h1>
     <form action="/music-builders/user/register" method="POST">
-      <label for="username">ユーザー名</label>
-      <input type="text" name="username">
-      <label for="usermail">メールアドレス</label>
-      <input type="email" name="usermail">
-      <label for="userpassword">パスワード</label>
-      <input type="password" name="userpassword">
-      <input type="submit" value="登録">
-      <input type="reset" value="キャンセル">
+      <div>
+        <label for="username">ユーザー名</label>
+        <input type="text" name="username">
+      </div>
+      <div>
+        <label for="usermail">メールアドレス</label>
+        <input type="email" name="usermail">
+      </div>
+      <div>
+        <label for="userpassword">パスワード</label>
+        <input type="password" name="userpassword">
+      </div>
+      <div>
+        <input type="submit" value="登録">
+        <input type="reset" value="キャンセル">
+      </div>
     </form>
+    <% if (model) { %>
+      <% for (const m of model) { %>
+        <div><%= m.errorMessage %></div>
+      <% } %>
+    <% } %>
   </body>
 </html>
