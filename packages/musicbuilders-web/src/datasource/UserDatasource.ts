@@ -37,8 +37,19 @@ export class UserDatasource implements UserRepository {
   logicalDelete(userId: UserId): Promise<number> {
     throw new Error("Method not implemented.");
   }
-  findByUserId(userId: UserId): Promise<User | null> {
-    throw new Error("Method not implemented.");
+
+  public async findByUserId(userId: UserId): Promise<User | null> {
+    const usersEntity: UsersEntity | undefined = await getRepository(UsersEntity).findOne({userId: userId.value});
+    if (usersEntity) {
+      const userId: UserId = new UserId(usersEntity.userId);
+      const userName: UserName = new UserName(usersEntity.userName);
+      const userMail: UserMail = new UserMail(usersEntity.userMail);
+      const userPassword: UserPassword = new UserPassword(usersEntity.userPassword);
+      const fintUser: User = User.recreate(userId, userName, userMail, userPassword, usersEntity.createdAt, usersEntity.updatedAt);
+      return fintUser;
+    } else {
+      return null;
+    }
   }
 
   public async findByUserMail(userMail: UserMail): Promise<User | null> {

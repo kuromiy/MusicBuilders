@@ -6,5 +6,19 @@
   </head>
   <body>
     <h1>ログイン</h1>
+    <form action="/music-builders/login" method="POST">
+      <div>
+        <label for="usermail">メールアドレス</label>
+        <input type="email" name="usermail">
+      </div>
+      <div>
+        <label for="userpassword">パスワード</label>
+        <input type="password" name="userpassword">
+      </div>
+      <div>
+        <input type="submit" value="登録">
+        <input type="reset" value="キャンセル">
+      </div>
+    </form>
   </body>
 </html>
