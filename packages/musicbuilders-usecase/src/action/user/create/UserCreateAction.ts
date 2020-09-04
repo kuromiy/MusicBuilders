@@ -10,6 +10,10 @@ import { UserId } from "musicbuilders-domain/src/user/UserId";
 import { UserDto } from "../../../dto/user/UserDto";
 import { UserConverter } from "../../../converter/UserConverter";
 import { inject, injectable } from "inversify";
+import { Result } from "../../../utils/Result";
+import { Failure } from "../../../utils/Failure";
+import { Success } from "../../../utils/Success";
+import { UseCaseError } from "../../../error/UseCaseError";
 
 /**
  * ユーザー作成ユースケース実装クラス
@@ -22,14 +26,14 @@ export class UserCreateAction implements UserCreateUseCase {
     this._userRepository = userRepository;
   }
 
-  public async handle(input: UserCreateInput): Promise<UserCreateOutput> {
+  public async handle(input: UserCreateInput): Promise<Result<UserCreateOutput, UseCaseError>> {
     const userName: UserName = new UserName(input.userName);
     const userMail: UserMail = new UserMail(input.userMail);
     const userPassword: UserPassword = new UserPassword(input.userPassword);
 
     // 1. 登録されているメールアドレス判定
     const existUser: User | null = await this._userRepository.findByUserMail(userMail);
-    if (existUser) throw new Error("既に使われているメールアドレスです。");
+    if (existUser) return new Failure(UseCaseError.USE001);
 
     // 2. ユーザーID生成
     const userId: UserId = await this._userRepository.generateUserId();
@@ -41,6 +45,6 @@ export class UserCreateAction implements UserCreateUseCase {
 
     const userDto: UserDto = UserConverter.convert(registerableUser);
     const output: UserCreateOutput = new UserCreateOutput(userDto);
-    return output;
+    return new Success(output);
   }
 }

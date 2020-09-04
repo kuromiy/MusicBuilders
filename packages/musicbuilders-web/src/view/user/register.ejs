@@ -7,27 +7,40 @@
   <body>
     <h1>ユーザー登録</h1>
     <form action="/music-builders/user/register" method="POST">
+      <% if (model.hasUseCaseError()) { %>
+        <div><%= model.useCaseErrorViewModel.errorName %></div>
+      <% } %>
       <div>
         <label for="username">ユーザー名</label>
         <input type="text" name="username">
+        <% if (model.hasRequestError("_userName")) { %>
+          <% for (const e of model.getRequestError("_userName")) { %>
+            <div><%= e.errorMessage %></div>
+          <% } %>
+        <% } %>
       </div>
       <div>
         <label for="usermail">メールアドレス</label>
         <input type="email" name="usermail">
+        <% if (model.hasRequestError("_userMail")) { %>
+          <% for (const e of model.getRequestError("_userMail")) { %>
+            <div><%= e.errorMessage %></div>
+          <% } %>
+        <% } %>
       </div>
       <div>
         <label for="userpassword">パスワード</label>
         <input type="password" name="userpassword">
+        <% if (model.hasRequestError("_userPassword")) { %>
+          <% for (const e of model.getRequestError("_userPassword")) { %>
+            <div><%= e.errorMessage %></div>
+          <% } %>
+        <% } %>
       </div>
       <div>
         <input type="submit" value="登録">
         <input type="reset" value="キャンセル">
       </div>
     </form>
-    <% if (model) { %>
-      <% for (const m of model) { %>
-        <div><%= m.errorMessage %></div>
-      <% } %>
-    <% } %>
   </body>
 </html>

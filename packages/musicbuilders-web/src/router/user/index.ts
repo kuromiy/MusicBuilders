@@ -7,6 +7,7 @@ import { UserRegisterIndexResponse } from "musicbuilders-port/src/response/UserR
 import { container } from "../../container";
 import { UserRegisterPresenter } from "../../presenter/UserRegisterPresenter";
 import { wrap } from "../../utils/wrap";
+import { RequestErrorViewModel } from "../../viewmodel/error/RequestErrorViewModel";
 import { UserRegisterViewModel } from "../../viewmodel/UserRegisterViewModel";
 
 const router: Express.Router = Express.Router();
@@ -15,7 +16,7 @@ router.get("/register", wrap(async (req: Express.Request, res: Express.Response)
   const request: UserRegisterIndexRequest = new UserRegisterIndexRequest();
   const controller: UserRegisterController = container.get<UserRegisterController>(UserRegisterController);
   const response: UserRegisterIndexResponse = await controller.index(request);
-  return res.render("user/register", {model: "test"});
+  return res.render("user/register", {model: new UserRegisterViewModel("user/register", new Array<RequestErrorViewModel>(), null)});
 }));
 
 router.post("/register", wrap(async (req: Express.Request, res: Express.Response) => {
@@ -23,7 +24,7 @@ router.post("/register", wrap(async (req: Express.Request, res: Express.Response
   const controller: UserRegisterController = container.get<UserRegisterController>(UserRegisterController);
   const response: UserRegisterCreateResponse = await controller.create(request);
   const viewModel: UserRegisterViewModel = UserRegisterPresenter.present(response);
-  return res.render(viewModel.viewName, {model: viewModel.model});
+  return res.render(viewModel.viewName, {model: viewModel});
 }));
 
 export default router;

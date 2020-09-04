@@ -6,6 +6,10 @@ import { UserCreateOutput } from "musicbuilders-usecase/src/action/user/create/U
 import { inject, injectable } from "inversify";
 import { validate, ValidationError } from "class-validator";
 import { ErrorDto } from "../response/error/ErrorDto";
+import { Result } from "musicbuilders-usecase/src/utils/Result";
+import { UseCaseError } from "musicbuilders-usecase/src/error/UseCaseError";
+import { UseCaseErrorDto } from "../response/error/UseCaseErrorDto";
+import { RequestErrorDto } from "../response/error/RequestErrorDto";
 
 /**
  * ユーザー登録画面ユーザー登録サービス
@@ -19,23 +23,28 @@ export class UserRegisterCreateService {
   }
 
   public async execute(request: UserRegisterCreateRequest): Promise<UserRegisterCreateResponse> {
+    // TODO class-validatorを直接呼び出すのではなくて、ラップしたクラスを呼び出すように修正
+    // TODO JavaのOptional型のorElseメソッドのように、エラー時のみ実行される流れにしたい。
     const errors: Array<ValidationError> = await validate(request);
     if (errors.length > 0) {
       // TODO リファクタ
-      const errorDtoList: Array<ErrorDto> = new Array<ErrorDto>();
+      const errorDtoList: Array<RequestErrorDto> = new Array<RequestErrorDto>();
       for (const e of errors) {
         if (e.constraints) {
           for (const ccc of Object.keys(e.constraints)) {
-            const dto: ErrorDto = new ErrorDto(e.property, e.constraints[ccc]);
+            const dto: RequestErrorDto = new RequestErrorDto(e.property, e.constraints[ccc]);
             errorDtoList.push(dto);
           }
         }
       }
-      return UserRegisterCreateResponse.createErrorResponse(errorDtoList);
+      return UserRegisterCreateResponse.createRequestErrorResponse(errorDtoList);
     }
     const input: UserCreateInput = new UserCreateInput(request.userName, request.userMail, request.userPassword);
-    const output: UserCreateOutput = await this._userCreateUseCase.handle(input);
-    // TODO ユースケース層の復帰可能エラーを例外ではなく正常で処理する。
-    return UserRegisterCreateResponse.createNormalResponse(output.userDto.userId);
+    const result: Result<UserCreateOutput, UseCaseError> = await this._userCreateUseCase.handle(input);
+    if (result.isFailure()) {
+      const useCaseErrorDto: UseCaseErrorDto = new UseCaseErrorDto(result.value.errorCode, result.value.errorName, result.value.errorMessage);
+      return UserRegisterCreateResponse.createUseCaseErrorResponse(useCaseErrorDto);
+    }
+    return UserRegisterCreateResponse.createNormalResponse(result.value.userDto.userId);
   }
 }
