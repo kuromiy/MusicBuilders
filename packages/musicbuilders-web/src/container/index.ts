@@ -9,6 +9,8 @@ import { LoginController } from "musicbuilders-port/src/controller/LoginControll
 import { LoginLoginService } from "musicbuilders-port/src/service/LoginLoginService";
 import { UserGetUseCase } from "musicbuilders-usecase/src/action/user/get/UserGetUseCase";
 import { UserGetAction } from "musicbuilders-usecase/src/action/user/get/UserGetAction";
+import { UserGetByUserMailAction } from "musicbuilders-usecase/src/action/user/getbyusermail/UserGetByUserMailAction";
+import { UserGetByUserMailUseCase } from "musicbuilders-usecase/src/action/user/getbyusermail/UserGetByUserMailUseCase";
 
 const container: Container = new Container();
 
@@ -23,6 +25,7 @@ container.bind<LoginLoginService>(LoginLoginService).toSelf();
 // UseCase設定
 container.bind<UserCreateUseCase>("UserCreateUseCase").to(UserCreateAction);
 container.bind<UserGetUseCase>("UserGetUseCase").to(UserGetAction);
+container.bind<UserGetByUserMailUseCase>("UserGetByUserMailUseCase").to(UserGetByUserMailAction);
 
 // Repository設定
 container.bind<UserRepository>("UserRepository").to(UserDatasource);

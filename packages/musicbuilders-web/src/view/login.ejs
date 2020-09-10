@@ -2,23 +2,59 @@
 <html>
   <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ログイン</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
   </head>
   <body>
-    <h1>ログイン</h1>
-    <form action="/music-builders/login" method="POST">
-      <div>
-        <label for="usermail">メールアドレス</label>
-        <input type="email" name="usermail">
+    <div class="columns is-centered">
+      <div class="column is-10">
+        <h1 class="title">ログイン</h1>
+        <form action="/music-builders/login" method="POST">
+          <% if (model.hasUseCaseError()) { %>
+            <article class="message is-danger">
+<!--
+              <div class="message-header">
+                <p>Error</p>
+                <button class="delete" aria-label="delete"></button>
+              </div>
+-->
+              <div class="message-body">
+                <%= model.useCaseErrorViewModel.errorName %>
+              </div>
+            </article>
+          <% } %>
+
+          <div class="field">
+            <label class="label" for="usermail">メールアドレス</label>
+            <div class="control">
+              <input class="input <% if (model.hasRequestError("_userMail")) { %>is-danger<% } %>" type="email" name="usermail">
+            </div>
+            <% for (const e of model.getRequestError("_userMail")) { %>
+              <p class="help is-danger"><%= e.errorMessage %></p>
+            <% } %>
+          </div>
+
+          <div class="field">
+            <label class="label" for="userpassword">パスワード</label>
+            <div class="control">
+              <input class="input <% if (model.hasRequestError("_userPassword")) { %>is-danger<% } %>" type="password" name="userpassword">
+            </div>
+            <% for (const e of model.getRequestError("_userPassword")) { %>
+              <p class="help is-danger"><%= e.errorMessage %></p>
+            <% } %>
+          </div>
+
+          <div class="field is-grouped">
+            <div class="control">
+              <input class="button is-link" type="submit" value="登録">
+            </div>
+            <div class="control">
+              <input class="button is-link is-light" type="reset" value="キャンセル">
+            </div>
+          </div>
+        </form>
       </div>
-      <div>
-        <label for="userpassword">パスワード</label>
-        <input type="password" name="userpassword">
-      </div>
-      <div>
-        <input type="submit" value="登録">
-        <input type="reset" value="キャンセル">
-      </div>
-    </form>
+    </div>
   </body>
 </html>
