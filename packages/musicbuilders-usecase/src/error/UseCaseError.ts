@@ -1,6 +1,7 @@
 export class UseCaseError {
   public static USE001 = new UseCaseError("USE001", "ユーザー登録エラー", "既に使われているメールアドレスです。");
   public static USE002 = new UseCaseError("USE002", "ユーザー取得エラー", "ユーザーが見つかりませんでした。");
+  public static DEFAULT = new UseCaseError("DEFAULT", "デフォルトエラー", "実装されていないエラーです。");
 
   private _errorCode: string;
   private _errorName: string;

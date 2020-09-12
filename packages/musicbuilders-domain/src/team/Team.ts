@@ -26,4 +26,32 @@ export class Team {
     const now = new Date();
     return new Team(teamId, teamName, teamDescription, teamAdministrator, new Array<UserId>(), now, now);
   }
+
+  public get teamId(): string {
+    return this._teamId.value;
+  }
+
+  public get teamName(): string {
+    return this._teamName.value;
+  }
+
+  public get teamDescription(): string {
+    return this._teamDescription.value;
+  }
+
+  public get teamAdministrator(): string {
+    return this._teamAdministrator.value;
+  }
+
+  public get teamMemberList(): Array<string> {
+    return this._teamMemberList.map(value => value.value);
+  }
+
+	public get createdAt(): Date {
+		return this._createdAt;
+	}
+
+  public get updatedAt(): Date {
+		return this._updatedAt;
+	}
 }
