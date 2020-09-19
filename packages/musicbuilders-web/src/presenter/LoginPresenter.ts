@@ -5,10 +5,11 @@ import { LoginViewModel } from "../viewmodel/LoginViewModel";
 
 export class LoginPresenter {
   public static present(response: LoginLoginResponse): LoginViewModel {
+    const viewName = response.hasRequestError() || response.hasUseCaseError() ? "login" : "home";
     const vm2 = response.hasUseCaseError() ? new UseCaseErrorViewModel(response.useCaseErrorDto.errorCode, response.useCaseErrorDto.errorName, response.useCaseErrorDto.errorMessage) : null;
     const vm1 = response.requestErrorDtoList.map(value => {
       return new RequestErrorViewModel(value.errorProperty, value.errorMessage);
     });
-    return new LoginViewModel("login", vm1, vm2);
+    return new LoginViewModel(viewName, vm1, vm2);
   }
 }

@@ -28,7 +28,7 @@ router.post("/login", wrap(async (req: Express.Request, res: Express.Response) =
   // TODO 自然にコーディング出来ないかを考える。
   if (response.hasRequestError() || response.hasUseCaseError()) return res.render(viewModel.viewName, {model: viewModel});
   if (req.session) req.session.userid = response.userId;
-  return res.redirect("/music-builders");
+  return res.redirect("/music-builders/" + viewModel.viewName);
 }));
 
 export default router;

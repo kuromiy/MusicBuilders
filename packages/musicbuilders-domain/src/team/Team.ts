@@ -27,6 +27,10 @@ export class Team {
     return new Team(teamId, teamName, teamDescription, teamAdministrator, new Array<UserId>(), now, now);
   }
 
+  public static recreate(teamId: TeamId, teamName: TeamName, teamDescription: TeamDescription, teamAdministrator: UserId, teamMemberList: Array<UserId>, createdAt: Date, updatedAt: Date): Team {
+    return new Team(teamId, teamName, teamDescription, teamAdministrator, teamMemberList, createdAt, updatedAt);
+  }
+
   public get teamId(): string {
     return this._teamId.value;
   }

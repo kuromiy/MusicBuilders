@@ -17,6 +17,10 @@ import { TeamCreateUseCase } from "musicbuilders-usecase/src/action/team/create/
 import { TeamCreateAction } from "musicbuilders-usecase/src/action/team/create/TeamCreateAction";
 import { TeamRepository } from "musicbuilders-domain/src/team/TeamRepository";
 import { TeamDatasource } from "../datasource/TeamDatasource";
+import { HomeController } from "musicbuilders-port/src/controller/HomeController";
+import { HomeIndexService } from "musicbuilders-port/src/service/HomeIndexService";
+import { TeamListUseCase } from "musicbuilders-usecase/src/action/team/list/TeamListUseCase";
+import { TeamListAction } from "musicbuilders-usecase/src/action/team/list/TeamListAction";
 
 const container: Container = new Container();
 
@@ -24,17 +28,20 @@ const container: Container = new Container();
 container.bind<UserRegisterController>(UserRegisterController).toSelf();
 container.bind<LoginController>(LoginController).toSelf();
 container.bind<TeamRegisterController>(TeamRegisterController).toSelf();
+container.bind<HomeController>(HomeController).toSelf();
 
 // Service設定
 container.bind<UserRegisterCreateService>(UserRegisterCreateService).toSelf();
 container.bind<LoginLoginService>(LoginLoginService).toSelf();
 container.bind<TeamRegisterCreateService>(TeamRegisterCreateService).toSelf();
+container.bind<HomeIndexService>(HomeIndexService).toSelf();
 
 // UseCase設定
 container.bind<UserCreateUseCase>("UserCreateUseCase").to(UserCreateAction);
 container.bind<UserGetUseCase>("UserGetUseCase").to(UserGetAction);
 container.bind<UserGetByUserMailUseCase>("UserGetByUserMailUseCase").to(UserGetByUserMailAction);
 container.bind<TeamCreateUseCase>("TeamCreateUseCase").to(TeamCreateAction);
+container.bind<TeamListUseCase>("TeamListUseCase").to(TeamListAction);
 
 // Repository設定
 container.bind<UserRepository>("UserRepository").to(UserDatasource);

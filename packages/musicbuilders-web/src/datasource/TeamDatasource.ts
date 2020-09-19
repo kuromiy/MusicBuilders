@@ -1,6 +1,8 @@
 import { injectable } from "inversify";
 import { Team } from "musicbuilders-domain/src/team/Team";
+import { TeamDescription } from "musicbuilders-domain/src/team/TeamDescription";
 import { TeamId } from "musicbuilders-domain/src/team/TeamId";
+import { TeamName } from "musicbuilders-domain/src/team/TeamName";
 import { TeamRepository } from "musicbuilders-domain/src/team/TeamRepository";
 import { UserId } from "musicbuilders-domain/src/user/UserId";
 import { getRepository } from "typeorm";
@@ -43,8 +45,20 @@ export class TeamDatasource implements TeamRepository {
     throw new Error("Method not implemented.");
   }
 
-  listByUserId(userId: UserId): Promise<Team[]> {
-    throw new Error("Method not implemented.");
+  public async listByUserId(userId: UserId): Promise<Array<Team>> {
+    const teamsEntityList: Array<TeamsEntity> = await getRepository(TeamsEntity).find({relations: ["teamAdministrator"], where: {teamAdministrator: userId.value}});
+    const teamList: Array<Team> = teamsEntityList.map(value => {
+      const teamId: TeamId = new TeamId(value.teamId);
+      const teamName: TeamName = new TeamName(value.teamName);
+      const teamDescription: TeamDescription = new TeamDescription(value.teamDescription);
+      const teamAdministrator: UserId = new UserId(value.teamAdministrator.userId);
+      // TODO 修正
+      const teamMemberList: Array<UserId> = new Array<UserId>();
+      const createdAt: Date = value.createdAt;
+      const updatedAt: Date = value.updatedAt;
+      return Team.recreate(teamId, teamName, teamDescription, teamAdministrator, teamMemberList, createdAt, updatedAt);
+    });
+    return teamList;
   }
 
   public async generateTeamId(): Promise<TeamId> {
