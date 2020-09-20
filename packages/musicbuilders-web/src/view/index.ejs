@@ -8,6 +8,9 @@
   </head>
   <body>
     <h1 class="title">ホーム</h1>
+    <form action="/music-builders/logout" method="POST">
+      <input type="submit" value="ログアウト">
+    </form>
     <% if (model.hasTeamList()) { %>
       <% for (const team of model.teamViewDtoList) { %>
         <p><%= team.teamName %></p>

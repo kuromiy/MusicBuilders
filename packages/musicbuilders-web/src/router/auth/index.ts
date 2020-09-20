@@ -31,4 +31,9 @@ router.post("/login", wrap(async (req: Express.Request, res: Express.Response) =
   return res.redirect("/music-builders/" + viewModel.viewName);
 }));
 
+router.post("/logout", wrap(async (req: Express.Request, res: Express.Response) => {
+  if (req.session) req.session.destroy((err: any) => console.log(err));
+  return res.redirect("/music-builders/login");
+}));
+
 export default router;
