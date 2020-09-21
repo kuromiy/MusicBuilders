@@ -41,8 +41,20 @@ export class TeamDatasource implements TeamRepository {
     throw new Error("Method not implemented.");
   }
 
-  findByTeamId(teamId: TeamId): Promise<Team> {
-    throw new Error("Method not implemented.");
+  public async findByTeamId(teamId: TeamId): Promise<Team | null> {
+    const teamEntity: TeamsEntity | undefined = await getRepository(TeamsEntity).findOne({relations: ["teamAdministrator"], where: {teamId: teamId.value}});
+    if (teamEntity) {
+      const teamId: TeamId = new TeamId(teamEntity.teamId);
+      const teamName: TeamName = new TeamName(teamEntity.teamName);
+      const teamDescription: TeamDescription = new TeamDescription(teamEntity.teamDescription);
+      const teamAdministrator: UserId = new UserId(teamEntity.teamAdministrator.userId);
+      const teamMemberList: Array<UserId> = new Array<UserId>();
+      const createdAt: Date = teamEntity.createdAt;
+      const updatedAt: Date = teamEntity.updatedAt;
+      return Team.recreate(teamId, teamName, teamDescription, teamAdministrator, teamMemberList, createdAt, updatedAt);
+    } else {
+      return null;
+    }
   }
 
   public async listByUserId(userId: UserId): Promise<Array<Team>> {

@@ -6,7 +6,7 @@ export interface TeamRepository {
   register(team: Team): Promise<number>;
   update(team: Team): Promise<number>;
   logicalDelete(teamId: TeamId): Promise<number>;
-  findByTeamId(teamId: TeamId): Promise<Team>;
+  findByTeamId(teamId: TeamId): Promise<Team | null>;
   listByUserId(userId: UserId): Promise<Array<Team>>;
   generateTeamId(): Promise<TeamId>;
 }

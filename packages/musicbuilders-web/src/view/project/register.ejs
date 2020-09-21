@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>プロジェクト登録</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+  </head>
+  <body>
+    <div class="columns is-centered">
+      <div class="column is-10">
+        <h1 class="title">プロジェクト登録</h1>
+        <form action="/music-builders/team/<%= model.teamId %>/project/register" method="POST">
+          <div class="field">
+            <label class="label" for="projectname">プロジェクト名</label>
+            <div class="control">
+              <input class="input" type="text" name="projectname">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="projectdescription">プロジェクト説明</label>
+            <div class="control">
+              <textarea class="textarea" name="projectdescription"></textarea>
+            </div>
+          </div>
+
+          <div class="field is-grouped">
+            <div class="control">
+              <input class="button is-link" type="submit" value="登録">
+            </div>
+            <div class="control">
+              <input class="button is-link is-light" type="reset" value="キャンセル">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

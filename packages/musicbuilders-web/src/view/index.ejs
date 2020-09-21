@@ -14,6 +14,7 @@
     <% if (model.hasTeamList()) { %>
       <% for (const team of model.teamViewDtoList) { %>
         <p><%= team.teamName %></p>
+        <a href="/music-builders/team/<%= team.teamId %>/project/register">プロジェクト登録</a>
       <% } %>
     <% } else { %>
       <div>所属しているチームはありません。</div>

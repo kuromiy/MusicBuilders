@@ -21,6 +21,12 @@ import { HomeController } from "musicbuilders-port/src/controller/HomeController
 import { HomeIndexService } from "musicbuilders-port/src/service/HomeIndexService";
 import { TeamListUseCase } from "musicbuilders-usecase/src/action/team/list/TeamListUseCase";
 import { TeamListAction } from "musicbuilders-usecase/src/action/team/list/TeamListAction";
+import { ProjectRegisterController } from "musicbuilders-port/src/controller/ProjectRegisterController";
+import { ProjectRegisterCreateService } from "musicbuilders-port/src/service/ProjectRegisterCreateService";
+import { ProjectCreateUseCase } from "musicbuilders-usecase/src/action/project/create/ProjectCreateUseCase";
+import { ProjectCreateAction } from "musicbuilders-usecase/src/action/project/create/ProjectCreateAction";
+import { ProjectRepository } from "musicbuilders-domain/src/project/ProjectRepository";
+import { ProjectDatasource } from "../datasource/ProjectDatasource";
 
 const container: Container = new Container();
 
@@ -29,12 +35,14 @@ container.bind<UserRegisterController>(UserRegisterController).toSelf();
 container.bind<LoginController>(LoginController).toSelf();
 container.bind<TeamRegisterController>(TeamRegisterController).toSelf();
 container.bind<HomeController>(HomeController).toSelf();
+container.bind<ProjectRegisterController>(ProjectRegisterController).toSelf();
 
 // Service設定
 container.bind<UserRegisterCreateService>(UserRegisterCreateService).toSelf();
 container.bind<LoginLoginService>(LoginLoginService).toSelf();
 container.bind<TeamRegisterCreateService>(TeamRegisterCreateService).toSelf();
 container.bind<HomeIndexService>(HomeIndexService).toSelf();
+container.bind<ProjectRegisterCreateService>(ProjectRegisterCreateService).toSelf();
 
 // UseCase設定
 container.bind<UserCreateUseCase>("UserCreateUseCase").to(UserCreateAction);
@@ -42,9 +50,11 @@ container.bind<UserGetUseCase>("UserGetUseCase").to(UserGetAction);
 container.bind<UserGetByUserMailUseCase>("UserGetByUserMailUseCase").to(UserGetByUserMailAction);
 container.bind<TeamCreateUseCase>("TeamCreateUseCase").to(TeamCreateAction);
 container.bind<TeamListUseCase>("TeamListUseCase").to(TeamListAction);
+container.bind<ProjectCreateUseCase>("ProjectCreateUseCase").to(ProjectCreateAction);
 
 // Repository設定
 container.bind<UserRepository>("UserRepository").to(UserDatasource);
 container.bind<TeamRepository>("TeamRepository").to(TeamDatasource);
+container.bind<ProjectRepository>("ProjectRepository").to(ProjectDatasource);
 
 export { container };

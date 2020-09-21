@@ -9,6 +9,7 @@ import { RequestErrorViewModel } from "../../viewmodel/error/RequestErrorViewMod
 import { TeamRegisterCreateRequest } from "musicbuilders-port/src/request/TeamRegisterCreateRequest";
 import { TeamRegisterCreateResponse } from "musicbuilders-port/src/response/TeamRegisterCreateResponse";
 import { TeamRegisterPresenter } from "../../presenter/TeamRegisterPresenter";
+import ProjectRouter from "../project";
 
 const router: Express.Router = Express.Router();
 
@@ -26,5 +27,7 @@ router.post("/register", wrap(async (req: Express.Request, res: Express.Response
   const viewmModel: TeamRegisterViewModel = TeamRegisterPresenter.present(response);
   return res.render(viewmModel.viewName, {model: viewmModel});
 }));
+
+router.use(ProjectRouter);
 
 export default router;
