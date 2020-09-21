@@ -27,6 +27,8 @@ import { ProjectCreateUseCase } from "musicbuilders-usecase/src/action/project/c
 import { ProjectCreateAction } from "musicbuilders-usecase/src/action/project/create/ProjectCreateAction";
 import { ProjectRepository } from "musicbuilders-domain/src/project/ProjectRepository";
 import { ProjectDatasource } from "../datasource/ProjectDatasource";
+import { RequestValidator } from "musicbuilders-port/src/validator/RequestValidator";
+import { RequestValidatorByClassValidator } from "musicbuilders-port/src/validator/RequestValidatorByClassValidator";
 
 const container: Container = new Container();
 
@@ -56,5 +58,8 @@ container.bind<ProjectCreateUseCase>("ProjectCreateUseCase").to(ProjectCreateAct
 container.bind<UserRepository>("UserRepository").to(UserDatasource);
 container.bind<TeamRepository>("TeamRepository").to(TeamDatasource);
 container.bind<ProjectRepository>("ProjectRepository").to(ProjectDatasource);
+
+// Other設定
+container.bind<RequestValidator>("RequestValidator").to(RequestValidatorByClassValidator);
 
 export { container };

@@ -9,30 +9,24 @@ import { Result } from "musicbuilders-usecase/src/utils/Result";
 import { TeamCreateOutput } from "musicbuilders-usecase/src/action/team/create/TeamCreateOutput";
 import { UseCaseError } from "musicbuilders-usecase/src/error/UseCaseError";
 import { UseCaseErrorDto } from "../response/error/UseCaseErrorDto";
+import { RequestValidator } from "../validator/RequestValidator";
 
 @injectable()
 export class TeamRegisterCreateService {
   private _teamCreateUseCase: TeamCreateUseCase;
+  private _requestValidator: RequestValidator;
 
-  constructor(@inject("TeamCreateUseCase") teamCreateUseCase: TeamCreateUseCase) {
-    this._teamCreateUseCase = teamCreateUseCase;
+  constructor(
+    @inject("TeamCreateUseCase") teamCreateUseCase: TeamCreateUseCase,
+    @inject("RequestValidator") requestValidator: RequestValidator) {
+      this._teamCreateUseCase = teamCreateUseCase;
+      this._requestValidator = requestValidator;
   }
 
   public async execute(request: TeamRegisterCreateRequest): Promise<TeamRegisterCreateResponse> {
-    const errors: Array<ValidationError> = await validate(request);
-    if (errors.length > 0) {
-      // TODO リファクタ
-      const errorDtoList: Array<RequestErrorDto> = new Array<RequestErrorDto>();
-      for (const e of errors) {
-        if (e.constraints) {
-          for (const ccc of Object.keys(e.constraints)) {
-            const dto: RequestErrorDto = new RequestErrorDto(e.property, e.constraints[ccc]);
-            errorDtoList.push(dto);
-          }
-        }
-      }
-      return TeamRegisterCreateResponse.createRequestErrorResponse(errorDtoList);
-    }
+    const errorDtoList: Array<RequestErrorDto> = await this._requestValidator.validate(request);
+    if (errorDtoList.length > 0) return TeamRegisterCreateResponse.createRequestErrorResponse(errorDtoList);
+
     const input: TeamCreateInput = new TeamCreateInput(request.teamName, request.teamDescription, request.userId);
     const result: Result<TeamCreateOutput, UseCaseError> = await this._teamCreateUseCase.handle(input);
     if (result.isFailure()) {

@@ -9,30 +9,24 @@ import { Result } from "musicbuilders-usecase/src/utils/Result";
 import { ProjectCreateOutput } from "musicbuilders-usecase/src/action/project/create/ProjectCreateOutput";
 import { UseCaseError } from "musicbuilders-usecase/src/error/UseCaseError";
 import { UseCaseErrorDto } from "../response/error/UseCaseErrorDto";
+import { RequestValidator } from "../validator/RequestValidator";
 
 @injectable()
 export class ProjectRegisterCreateService {
   private _projectCreateUseCase: ProjectCreateUseCase;
+  private _requestValidator: RequestValidator;
 
-  constructor(@inject("ProjectCreateUseCase") projectCreateUseCase: ProjectCreateUseCase) {
-    this._projectCreateUseCase = projectCreateUseCase;
+  constructor(
+    @inject("ProjectCreateUseCase") projectCreateUseCase: ProjectCreateUseCase,
+    @inject("RequestValidator") requestValidator: RequestValidator) {
+      this._projectCreateUseCase = projectCreateUseCase;
+      this._requestValidator = requestValidator;
   }
 
   public async execute(request: ProjectRegisterCreateRequest): Promise<ProjectRegisterCreateResponse> {
-    const errors: Array<ValidationError> = await validate(request);
-    if (errors.length > 0) {
-      // TODO リファクタ
-      const errorDtoList: Array<RequestErrorDto> = new Array<RequestErrorDto>();
-      for (const e of errors) {
-        if (e.constraints) {
-          for (const ccc of Object.keys(e.constraints)) {
-            const dto: RequestErrorDto = new RequestErrorDto(e.property, e.constraints[ccc]);
-            errorDtoList.push(dto);
-          }
-        }
-      }
-      return ProjectRegisterCreateResponse.createRequestErrorResponse(errorDtoList);
-    }
+    const errorDtoList: Array<RequestErrorDto> = await this._requestValidator.validate(request);
+    if (errorDtoList.length > 0) return ProjectRegisterCreateResponse.createRequestErrorResponse(errorDtoList);
+
     const input: ProjectCreateInput = new ProjectCreateInput(request.projectName, request.projectDescription, request.userId, request.teamId);
     const result: Result<ProjectCreateOutput, UseCaseError> = await this._projectCreateUseCase.handle(input);
     if (result.isFailure()) {

@@ -9,6 +9,7 @@ import { RequestErrorDto } from "../response/error/RequestErrorDto";
 import { UserGetByUserMailUseCase } from "musicbuilders-usecase/src/action/user/getbyusermail/UserGetByUserMailUseCase";
 import { UserGetByUserMailInput } from "musicbuilders-usecase/src/action/user/getbyusermail/UserGetByUserMailInput";
 import { UserGetByUserMailOutput } from "musicbuilders-usecase/src/action/user/getbyusermail/UserGetByUserMailOutput";
+import { RequestValidator } from "../validator/RequestValidator";
 
 /**
  * ログイン画面ログインサービス
@@ -16,26 +17,19 @@ import { UserGetByUserMailOutput } from "musicbuilders-usecase/src/action/user/g
 @injectable()
 export class LoginLoginService {
   private _userGetByUserMailUseCase: UserGetByUserMailUseCase;
+  private _requestValidator: RequestValidator;
 
-  constructor(@inject("UserGetByUserMailUseCase") userGetByUserMailUseCase: UserGetByUserMailUseCase) {
-    this._userGetByUserMailUseCase = userGetByUserMailUseCase;
+  constructor(
+    @inject("UserGetByUserMailUseCase") userGetByUserMailUseCase: UserGetByUserMailUseCase,
+    @inject("RequestValidator") requestValidator: RequestValidator) {
+      this._userGetByUserMailUseCase = userGetByUserMailUseCase;
+      this._requestValidator = requestValidator;
   }
 
   public async execute(request: LoginLoginRequest): Promise<LoginLoginResponse> {
-    const errors: Array<ValidationError> = await validate(request);
-    if (errors.length > 0) {
-      // TODO リファクタ
-      const errorDtoList: Array<RequestErrorDto> = new Array<RequestErrorDto>();
-      for (const e of errors) {
-        if (e.constraints) {
-          for (const ccc of Object.keys(e.constraints)) {
-            const dto: RequestErrorDto = new RequestErrorDto(e.property, e.constraints[ccc]);
-            errorDtoList.push(dto);
-          }
-        }
-      }
-      return LoginLoginResponse.createRequestErrorResponse(errorDtoList);
-    }
+    const errorDtoList: Array<RequestErrorDto> = await this._requestValidator.validate(request);
+    if (errorDtoList.length > 0) return LoginLoginResponse.createRequestErrorResponse(errorDtoList);
+
     const input: UserGetByUserMailInput = new UserGetByUserMailInput(request.userMail);
     const result: Result<UserGetByUserMailOutput, UseCaseError> = await this._userGetByUserMailUseCase.handle(input);
     if (result.isFailure()) {

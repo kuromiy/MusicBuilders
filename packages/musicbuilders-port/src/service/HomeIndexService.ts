@@ -10,30 +10,24 @@ import { UseCaseError } from "musicbuilders-usecase/src/error/UseCaseError";
 import { Result } from "musicbuilders-usecase/src/utils/Result";
 import { UseCaseErrorDto } from "../response/error/UseCaseErrorDto";
 import { TeamDto } from "../response/dto/TeamDto";
+import { RequestValidator } from "../validator/RequestValidator";
 
 @injectable()
 export class HomeIndexService {
   private _teamListUseCase: TeamListUseCase;
+  private _requestValidator: RequestValidator;
 
-	constructor(@inject("TeamListUseCase") teamListUseCase: TeamListUseCase) {
-    this._teamListUseCase = teamListUseCase;
+	constructor(
+    @inject("TeamListUseCase") teamListUseCase: TeamListUseCase,
+    @inject("RequestValidator") requestValidator: RequestValidator) {
+      this._teamListUseCase = teamListUseCase;
+      this._requestValidator = requestValidator;
 	}
 
   public async execute(request: HomeIndexRequest): Promise<HomeIndexResponse> {
-    const errors: Array<ValidationError> = await validate(request);
-    if (errors.length > 0) {
-      // TODO リファクタ
-      const errorDtoList: Array<RequestErrorDto> = new Array<RequestErrorDto>();
-      for (const e of errors) {
-        if (e.constraints) {
-          for (const ccc of Object.keys(e.constraints)) {
-            const dto: RequestErrorDto = new RequestErrorDto(e.property, e.constraints[ccc]);
-            errorDtoList.push(dto);
-          }
-        }
-      }
-      return HomeIndexResponse.createRequestErrorResponse(errorDtoList);
-    }
+    const errorDtoList: Array<RequestErrorDto> = await this._requestValidator.validate(request);
+    if (errorDtoList.length > 0) return HomeIndexResponse.createRequestErrorResponse(errorDtoList);
+
     const input: TeamListInput = new TeamListInput(request.userId);
     const result: Result<TeamListOutput, UseCaseError> = await this._teamListUseCase.handle(input);
     if (result.isFailure()) {
