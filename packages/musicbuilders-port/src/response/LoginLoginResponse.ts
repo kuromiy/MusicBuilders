@@ -1,51 +1,29 @@
+import { BaseResponse } from "./base/BaseResponse";
 import { RequestErrorDto } from "./error/RequestErrorDto";
 import { UseCaseErrorDto } from "./error/UseCaseErrorDto";
 
 /**
  * ログイン画面ログイン処理レスポンス
  */
-export class LoginLoginResponse {
-  private _userId: string | null;
-  private _requestErrorDtoList: Array<RequestErrorDto>;
-  private _useCaseErrorDto: UseCaseErrorDto | null;
+export class LoginLoginResponse extends BaseResponse {
+  private _userId!: string | null;
 
-	private constructor(userId: string | null, requestErrorDtoList: Array<RequestErrorDto>, useCaseErrorDto: UseCaseErrorDto | null) {
-		this._userId = userId;
-		this._requestErrorDtoList = requestErrorDtoList;
-		this._useCaseErrorDto = useCaseErrorDto;
-  }
-  
   public static createNormalResponse(userId: string): LoginLoginResponse {
-    return new LoginLoginResponse(userId, new Array<RequestErrorDto>(), null);
+    const response = new LoginLoginResponse();
+    response._userId = userId;
+    response._requestErrorDtoList = new Array<RequestErrorDto>();
+    response._useCaseErrorDto = null;
+    return response;
   }
 
-  public static createRequestErrorResponse(requestErrorDtoList: Array<RequestErrorDto>): LoginLoginResponse {
-    return new LoginLoginResponse(null, requestErrorDtoList, null);
-  }
-
-  public static createUseCaseErrorResponse(useCaseErrorDto: UseCaseErrorDto): LoginLoginResponse {
-    return new LoginLoginResponse(null, new Array<RequestErrorDto>(), useCaseErrorDto);
+  public static initialize(o: LoginLoginResponse, requestErrorDtoList: Array<RequestErrorDto>, useCaseErrorDto: UseCaseErrorDto | null) {
+    o._userId = null;
+    o._requestErrorDtoList = requestErrorDtoList;
+    o._useCaseErrorDto = useCaseErrorDto;
   }
 
 	public get userId(): string {
     if (!this._userId) throw new Error("");
 		return this._userId;
 	}
-
-	public get requestErrorDtoList(): Array<RequestErrorDto> {
-		return this._requestErrorDtoList;
-	}
-
-	public get useCaseErrorDto(): UseCaseErrorDto {
-    if (!this._useCaseErrorDto) throw new Error("");
-		return this._useCaseErrorDto;
-  }
-  
-  public hasRequestError(): boolean {
-    return this._requestErrorDtoList.length !== 0;
-  }
-
-  public hasUseCaseError(): boolean {
-    return this._useCaseErrorDto !== null;
-  }
 }
