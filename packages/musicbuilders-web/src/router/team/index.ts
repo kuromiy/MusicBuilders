@@ -10,6 +10,11 @@ import { TeamRegisterCreateRequest } from "musicbuilders-port/src/request/TeamRe
 import { TeamRegisterCreateResponse } from "musicbuilders-port/src/response/TeamRegisterCreateResponse";
 import { TeamRegisterPresenter } from "../../presenter/TeamRegisterPresenter";
 import ProjectRouter from "../project";
+import { TeamDetailIndexRequest } from "musicbuilders-port/src/request/TeamDetailIndexRequest";
+import { TeamDetailController } from "musicbuilders-port/src/controller/TeamDetailController";
+import { TeamDetailIndexResponse } from "musicbuilders-port/src/response/TeamDetailIndexResponse";
+import { TeamDetailViewModel } from "../../viewmodel/TeamDetailViewModel";
+import { TeamDetailPresenter } from "../../presenter/TeamDetailPresenter";
 
 const router: Express.Router = Express.Router();
 
@@ -26,6 +31,14 @@ router.post("/register", wrap(async (req: Express.Request, res: Express.Response
   const response: TeamRegisterCreateResponse = await controller.create(request);
   const viewmModel: TeamRegisterViewModel = TeamRegisterPresenter.present(response);
   return res.render(viewmModel.viewName, {model: viewmModel});
+}));
+
+router.get("/:teamid/detail", wrap(async (req: Express.Request, res: Express.Response) => {
+  const request: TeamDetailIndexRequest = new TeamDetailIndexRequest(req.params.teamid, req.body.offset, req.body.limit);
+  const controller: TeamDetailController = container.get<TeamDetailController>(TeamDetailController);
+  const response: TeamDetailIndexResponse = await controller.index(request);
+  const viewModel: TeamDetailViewModel = TeamDetailPresenter.present(response);
+  return res.render(viewModel.viewName, {model: viewModel});
 }));
 
 router.use(ProjectRouter);

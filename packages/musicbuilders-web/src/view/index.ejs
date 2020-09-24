@@ -15,6 +15,7 @@
       <% for (const team of model.teamViewDtoList) { %>
         <p><%= team.teamName %></p>
         <a href="/music-builders/team/<%= team.teamId %>/project/register">プロジェクト登録</a>
+        <a href="/music-builders/team/<%= team.teamId %>/detail">プロジェクト詳細</a>
       <% } %>
     <% } else { %>
       <div>所属しているチームはありません。</div>

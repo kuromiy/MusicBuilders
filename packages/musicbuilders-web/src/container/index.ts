@@ -29,6 +29,14 @@ import { ProjectRepository } from "musicbuilders-domain/src/project/ProjectRepos
 import { ProjectDatasource } from "../datasource/ProjectDatasource";
 import { RequestValidator } from "musicbuilders-port/src/validator/RequestValidator";
 import { RequestValidatorByClassValidator } from "musicbuilders-port/src/validator/RequestValidatorByClassValidator";
+import { TeamDetailController } from "musicbuilders-port/src/controller/TeamDetailController";
+import { TeamDetailIndexService } from "musicbuilders-port/src/service/TeamDetailIndexService";
+import { TeamGetUseCase } from "musicbuilders-usecase/src/action/team/get/TeamGetUseCase";
+import { TeamGetAction } from "musicbuilders-usecase/src/action/team/get/TeamGetAction";
+import { ProjectSearchUseCase } from "musicbuilders-usecase/src/action/project/search/ProjectSearchUseCase";
+import { ProjectSearchAction } from "musicbuilders-usecase/src/action/project/search/ProjectSearchAction";
+import { ProjectQueryService } from "musicbuilders-usecase/src/query/project/ProjectQueryService";
+import { ProjectQuerysource } from "../querysource/ProjectQuerysource";
 
 const container: Container = new Container();
 
@@ -38,6 +46,7 @@ container.bind<LoginController>(LoginController).toSelf();
 container.bind<TeamRegisterController>(TeamRegisterController).toSelf();
 container.bind<HomeController>(HomeController).toSelf();
 container.bind<ProjectRegisterController>(ProjectRegisterController).toSelf();
+container.bind<TeamDetailController>(TeamDetailController).toSelf();
 
 // Service設定
 container.bind<UserRegisterCreateService>(UserRegisterCreateService).toSelf();
@@ -45,6 +54,7 @@ container.bind<LoginLoginService>(LoginLoginService).toSelf();
 container.bind<TeamRegisterCreateService>(TeamRegisterCreateService).toSelf();
 container.bind<HomeIndexService>(HomeIndexService).toSelf();
 container.bind<ProjectRegisterCreateService>(ProjectRegisterCreateService).toSelf();
+container.bind<TeamDetailIndexService>(TeamDetailIndexService).toSelf();
 
 // UseCase設定
 container.bind<UserCreateUseCase>("UserCreateUseCase").to(UserCreateAction);
@@ -53,13 +63,18 @@ container.bind<UserGetByUserMailUseCase>("UserGetByUserMailUseCase").to(UserGetB
 container.bind<TeamCreateUseCase>("TeamCreateUseCase").to(TeamCreateAction);
 container.bind<TeamListUseCase>("TeamListUseCase").to(TeamListAction);
 container.bind<ProjectCreateUseCase>("ProjectCreateUseCase").to(ProjectCreateAction);
+container.bind<TeamGetUseCase>("TeamGetUseCase").to(TeamGetAction);
+container.bind<ProjectSearchUseCase>("ProjectSearchUseCase").to(ProjectSearchAction);
 
 // Repository設定
 container.bind<UserRepository>("UserRepository").to(UserDatasource);
 container.bind<TeamRepository>("TeamRepository").to(TeamDatasource);
 container.bind<ProjectRepository>("ProjectRepository").to(ProjectDatasource);
 
-// Other設定
+// QueryService設定
+container.bind<ProjectQueryService>("ProjectQueryService").to(ProjectQuerysource);
+
+// Util設定
 container.bind<RequestValidator>("RequestValidator").to(RequestValidatorByClassValidator);
 
 export { container };
